@@ -9,9 +9,9 @@ export default async function Home() {
   return (
     <HydrateClient>
       <Suspense fallback={<p>Loading...</p>}>
-        <ErrorBoundary fallback={<p>Error</p>}>
+        {/* <ErrorBoundary fallback={<p>Error</p>}> */}
           <PageClient />
-        </ErrorBoundary>
+        {/* </ErrorBoundary> */}
       </Suspense>
     </HydrateClient>
   );
