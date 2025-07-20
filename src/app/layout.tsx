@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { TRPCProvider } from "@/trpc/client";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Inter({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({
         className={geistSans.className}
       >
         <TRPCProvider>
+          <Toaster />
           {children}
         </TRPCProvider>
       </body>
