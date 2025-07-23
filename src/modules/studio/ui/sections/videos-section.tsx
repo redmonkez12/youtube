@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { snakeCaseToTitleCase } from "@/lib/utils";
-import { VideoThumbnail } from "@/modules/videos/ui/components/video-thumbnail/video-thumbnail";
+import { VideoThumbnail } from "@/modules/videos/ui/components/video-thumbnail";
 import { trpc } from "@/trpc/client";
 import { format } from "date-fns";
 import { GlobeIcon, LockIcon } from "lucide-react";
@@ -63,12 +63,12 @@ const VideosSectionSuspense = () => {
                     >
                       <div className="flex items-center gap-4">
                         <div className="relative aspect-video w-36 shrink-0">
-                          {/* <VideoThumbnail
+                          <VideoThumbnail
                             imageUrl={video.thumbnailUrl}
                             previewUrl={video.previewUrl}
                             title={video.title}
                             duration={video.duration || 0}
-                          /> */}
+                          />
                         </div>
                         <div className="flex flex-col overflow-hidden gap-y-1">
                           <span className="text-sm text-muted-foreground line-clamp-1">
@@ -83,12 +83,12 @@ const VideosSectionSuspense = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center">
-                      {/* {video.visibility === "private" ? (
+                      {video.visibility === "private" ? (
                         <LockIcon className="size-4 mr-2" />
                       ) : (
                         <GlobeIcon className="size-4 mr-2" />
-                      )} */}
-                      {/* {snakeCaseToTitleCase(video.visibility)} */}
+                      )}
+                      {snakeCaseToTitleCase(video.visibility)}
                     </div>
                   </TableCell>
                   <TableCell className="text-sm truncate">
