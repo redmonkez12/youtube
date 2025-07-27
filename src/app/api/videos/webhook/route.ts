@@ -12,6 +12,7 @@ import {
   VideoAssetTrackReadyWebhookEvent,
 } from "@mux/mux-node/resources/webhooks";
 import { NextRequest } from "next/server";
+import { UTApi } from "uploadthing/server";
 
 const SIGNING_SECRET = process.env.MUX_WEBHOOK_SECRET!;
 
@@ -71,9 +72,25 @@ export const POST = async (request: NextRequest) => {
       if (!playbackId) {
         return new Response("Missing playback ID ", { status: 400 });
       }
-      const thumbnailUrl = `https://image.mux.com/${playbackId}/thumbnail.png`;
-      const previewUrl = `https://image.mux.com/${playbackId}/animated.gif`;
+      const temporaryThumbnailUrl = `https://image.mux.com/${playbackId}/thumbnail.png`;
+      const temporaryPreviewUrl = `https://image.mux.com/${playbackId}/animated.gif`;
       const duration = data.duration ? Math.round(data.duration * 1000) : 0;
+
+      const utapi = new UTApi();
+      const [uploadedThumbnail, uploadedPreview] =
+        await utapi.uploadFilesFromUrl([
+          temporaryThumbnailUrl,
+          temporaryPreviewUrl,
+        ]);
+
+      if (!uploadedThumbnail.data || !uploadedPreview.data) {
+        return new Response("Failed to upload thumbnail or preview", {
+          status: 500,
+        });
+      }
+
+      const { key: thumbnailKey, ufsUrl: thumbnailUrl } = uploadedThumbnail.data;
+      const { key: previewKey, ufsUrl: previewUrl } = uploadedPreview.data;
 
       await db
         .update(videos)
@@ -83,6 +100,8 @@ export const POST = async (request: NextRequest) => {
           muxAssetId: data.id,
           thumbnailUrl,
           previewUrl,
+          thumbnailKey,
+          previewKey,
           duration,
         })
         .where(eq(videos.muxUploadId, data.upload_id));
